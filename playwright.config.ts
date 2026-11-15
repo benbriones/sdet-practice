@@ -12,7 +12,9 @@ export default defineConfig({
   // A test that only passes on retry is a failure worth seeing
   retries: 0,
   workers: process.env.CI ? 2 : undefined,
-  reporter: [["list"], ["html", { open: "never" }]],
+  reporter: process.env.CI
+    ? [["github"], ["html", { open: "never" }]]
+    : [["list"], ["html", { open: "never" }]],
   use: {
     baseURL: remoteBaseURL ?? localBaseURL,
     trace: "retain-on-failure",
@@ -23,10 +25,10 @@ export default defineConfig({
   webServer: remoteBaseURL
     ? undefined
     : {
-        // Production build, so local runs match what the container will serve
-        command: "npm run build && npm run start",
-        url: `${localBaseURL}/api/health`,
-        reuseExistingServer: !process.env.CI,
-        timeout: 180_000,
-      },
+      // Production build, so local runs match what the container will serve
+      command: "npm run build && npm run start",
+      url: `${localBaseURL}/api/health`,
+      reuseExistingServer: !process.env.CI,
+      timeout: 180_000,
+    },
 });
