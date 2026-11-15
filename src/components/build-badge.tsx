@@ -1,6 +1,7 @@
 /** Goal: Show which environment and commit served this page, to confirm a deploy at a glance. */
 import { getBuildInfo } from "@/lib/build-info";
 
+// Test comment
 const badgeClass =
   "flex items-center gap-2 rounded-full border border-zinc-300 px-3 py-1 font-mono text-xs text-zinc-600 dark:border-zinc-700 dark:text-zinc-400";
 
