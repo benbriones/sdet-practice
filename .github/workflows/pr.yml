@@ -70,11 +70,24 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+      # A published tag never changes, so skip the build if this SHA was already pushed
+      - id: exists
+        run: |
+          if docker buildx imagetools inspect "$IMAGE:$SHA" > /dev/null 2>&1; then
+            echo "found=true" >> "$GITHUB_OUTPUT"
+            echo "::notice::$IMAGE:$SHA already exists, skipping build"
+          else
+            echo "found=false" >> "$GITHUB_OUTPUT"
+          fi
+
       # QEMU lets the amd64 runner build the arm64 image
       - uses: docker/setup-qemu-action@v4
+        if: steps.exists.outputs.found != 'true'
       - uses: docker/setup-buildx-action@v4
+        if: steps.exists.outputs.found != 'true'
 
       - uses: docker/build-push-action@v7
+        if: steps.exists.outputs.found != 'true'
         with:
           # Build the checked-out files; the default fetches the merge commit instead
           context: .
