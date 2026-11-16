@@ -1,0 +1,30 @@
+# Goal: Keep the staging namespace matching deploy/chart plus the staging values on main.
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: staging
+  namespace: argocd
+  # Deleting this Application also deletes everything it deployed
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/benbriones/sdet-practice.git
+    targetRevision: main
+    path: deploy/chart
+    helm:
+      # Relative to path above
+      valueFiles:
+        - ../envs/staging/values.yaml
+  destination:
+    # The cluster Argo CD runs in
+    server: https://kubernetes.default.svc
+    namespace: staging
+  syncPolicy:
+    # prune deletes what Git removed; selfHeal reverts manual kubectl changes
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

@@ -1,0 +1,7 @@
+# Goal: Staging overrides; changing image.tag here and merging is how staging deploys.
+image:
+  # main build from GitHub Actions, already in GHCR
+  tag: ebfc443bd9ccf35751b4c750b82cb59fee317204
+environment: staging
+ingress:
+  host: staging.127.0.0.1.nip.io
