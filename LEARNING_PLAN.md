@@ -688,6 +688,10 @@ Write `deploy/kind/traefik-values.yaml` with:
 
 1. `service.spec.type: NodePort`
 2. `ports.web.nodePort: 30080`
+3. `providers.kubernetesIngress.publishedService.enabled: false`
+4. `providers.kubernetesIngress.ingressEndpoint.ip: "127.0.0.1"`
+
+Keys 3 and 4 make Traefik write an address into each Ingress's status. By default it copies the address of its own Service, and a NodePort Service has none. Without an address, Argo CD reports every Ingress as `Progressing` forever in Milestone 5. On EC2, k3s fills the address in for you.
 
 Install it, pinning the chart version you noted:
 
@@ -1045,6 +1049,7 @@ On push to `main`, after `image` succeeds, have CI commit the new SHA into `depl
 
 - **"I pushed and nothing happened."** Argo CD polls Git about every 3 minutes. Run `argocd app get staging --refresh`, or add a webhook later.
 - **`Synced` but `Degraded`.** The manifests applied fine; the pods are unhealthy. Go back to the Milestone 4 debugging steps.
+- **`Healthy` pods, but the app stays `Progressing`.** The Ingress has no address in its status. Check `kubectl get ingress -n staging -o jsonpath='{.items[0].status}'`, and see keys 3 and 4 in 4.3.
 - **`ComparisonError`.** Usually a wrong `path`, a missing values file, or a Helm template error. Run `helm template` locally with the same values.
 - **`repository not found` or an authentication error.** The repo is private, so Argo CD needs repo credentials.
 - **CRD `metadata.annotations: Too long`.** You installed with client-side apply.
