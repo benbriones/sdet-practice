@@ -1,0 +1,12 @@
+# Goal: One-node kind cluster that sends your Mac's port 80 into Traefik's NodePort.
+kind: Cluster
+apiVersion: kind.x-k8s.io/v1alpha4
+nodes:
+  - role: control-plane
+    extraPortMappings:
+      # Traefik listens on NodePort 30080; NodePorts must be 30000-32767
+      - containerPort: 30080
+        hostPort: 80
+        # Localhost only, so the cluster isn't reachable from your Wi-Fi network
+        listenAddress: "127.0.0.1"
+        protocol: TCP
