@@ -1,0 +1,2 @@
+# Helm templates aren't valid YAML until rendered; Prettier turns {{ }} into { { } }
+deploy/chart/templates/

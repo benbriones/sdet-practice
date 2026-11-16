@@ -1,0 +1,5 @@
+apiVersion: v2
+name: sdet-cicd-lab
+description: The sdet-cicd-lab Next.js app
+type: application
+version: 0.1.0

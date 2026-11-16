@@ -1,0 +1,21 @@
+# Goal: Tell Traefik to send this release's hostname to its Service.
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ .Release.Name }}
+  labels:
+    app.kubernetes.io/name: sdet-cicd-lab
+    app.kubernetes.io/instance: {{ .Release.Name }}
+spec:
+  ingressClassName: traefik
+  rules:
+    - host: {{ required "ingress.host is required" .Values.ingress.host | quote }}
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ .Release.Name }}
+                port:
+                  number: 80

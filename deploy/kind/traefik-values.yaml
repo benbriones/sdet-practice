@@ -1,0 +1,10 @@
+# Goal: Expose Traefik on the NodePort that kind maps to your Mac's port 80.
+# Chart traefik/traefik 42.4.0; install with --version 42.4.0
+service:
+  spec:
+    # kind has no cloud load balancer, so use a NodePort
+    type: NodePort
+ports:
+  web:
+    # Must match containerPort in deploy/kind/cluster.yaml
+    nodePort: 30080

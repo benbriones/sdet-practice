@@ -1,0 +1,18 @@
+# Goal: Give the app's pods one stable in-cluster address for the Ingress to target.
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}
+  labels:
+    app.kubernetes.io/name: sdet-cicd-lab
+    app.kubernetes.io/instance: {{ .Release.Name }}
+spec:
+  type: ClusterIP
+  selector:
+    app.kubernetes.io/name: sdet-cicd-lab
+    app.kubernetes.io/instance: {{ .Release.Name }}
+  ports:
+    - name: http
+      port: 80
+      # Named port, so it follows the container if the number changes
+      targetPort: http
