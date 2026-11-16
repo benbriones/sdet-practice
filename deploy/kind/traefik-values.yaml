@@ -8,3 +8,10 @@ ports:
   web:
     # Must match containerPort in deploy/kind/cluster.yaml
     nodePort: 30080
+providers:
+  kubernetesIngress:
+    # A NodePort Service has no address to copy, which leaves Argo CD's Ingress health stuck on Progressing
+    publishedService:
+      enabled: false
+    ingressEndpoint:
+      ip: "127.0.0.1"
