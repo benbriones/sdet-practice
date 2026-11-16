@@ -1,0 +1,11 @@
+# Goal: Defaults for one release of the app; every install sets image.tag and ingress.host.
+image:
+  repository: ghcr.io/benbriones/sdet-practice
+  # Always a commit SHA, never latest
+  tag: ""
+# Shown in /api/health and the build badge
+environment: local-k8s
+replicaCount: 1
+ingress:
+  # Traefik routes this hostname to the app
+  host: ""

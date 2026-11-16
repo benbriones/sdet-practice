@@ -13,5 +13,11 @@ next-env.d.ts
 e2e
 playwright.config.ts
 playwright-report
+blob-report
 
+# not part of the app; editing these shouldn't rebuild the image
+.github
+deploy
+scripts
+*.md
 
